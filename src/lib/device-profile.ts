@@ -78,12 +78,12 @@ export function buildDeviceProfile() {
         ],
       },
     ],
+    // Browsers only render WebVTT in <track>. Declaring just vtt makes Jellyfin convert
+    // SubRip/other text subtitles to vtt on the fly; styled and bitmap subs get burned in.
     SubtitleProfiles: [
       { Format: "vtt", Method: "External" },
-      { Format: "srt", Method: "External" },
-      { Format: "subrip", Method: "External" },
-      { Format: "ass", Method: "External" },
-      { Format: "ssa", Method: "External" },
+      { Format: "ass", Method: "Encode" },
+      { Format: "ssa", Method: "Encode" },
       { Format: "pgssub", Method: "Encode" },
       { Format: "dvdsub", Method: "Encode" },
       { Format: "dvbsub", Method: "Encode" },

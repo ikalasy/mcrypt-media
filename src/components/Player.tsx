@@ -85,6 +85,8 @@ export function Player(props: PlayerProps) {
   const [plan, setPlan] = useState<Plan | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showChrome, setShowChrome] = useState(true);
+  /** Jellyfin stream index of the active subtitle, or -1 for off. */
+  const [subtitleIndex, setSubtitleIndex] = useState<number>(-1);
 
   const positionTicks = useCallback((): number => {
     const video = videoRef.current;
@@ -149,6 +151,8 @@ export function Player(props: PlayerProps) {
         const chosen = choosePlan(info, itemId, startTicks);
         planRef.current = chosen;
         setPlan(chosen);
+        const preferred = chosen.source.DefaultSubtitleStreamIndex ?? -1;
+        setSubtitleIndex(chosen.subtitles.some((t) => t.Index === preferred) ? preferred : -1);
       } catch (err) {
         if (!cancelled) setError(err instanceof Error ? err.message : "Playback failed.");
       }
@@ -226,6 +230,15 @@ export function Player(props: PlayerProps) {
     };
   }, [plan, startTicks, report, stop, router, nextHref, backHref]);
 
+  /* Apply the chosen subtitle to the browser's text tracks. */
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    for (const track of Array.from(video.textTracks)) {
+      track.mode = String(subtitleIndex) === track.id ? "showing" : "disabled";
+    }
+  }, [subtitleIndex, plan]);
+
   /* Hide the title bar while the mouse is still. */
   useEffect(() => {
     let timer = window.setTimeout(() => setShowChrome(false), 3000);
@@ -249,11 +262,11 @@ export function Player(props: PlayerProps) {
         {plan?.subtitles.map((track, index) => (
           <track
             key={track.Index}
+            id={String(track.Index)}
             kind="subtitles"
             src={`${PROXY_BASE}${track.DeliveryUrl}`}
             srcLang={track.Language ?? "und"}
             label={track.DisplayTitle ?? track.Title ?? `Subtitle ${index + 1}`}
-            default={track.Index === plan.source.DefaultSubtitleStreamIndex}
           />
         ))}
       </video>
@@ -261,9 +274,28 @@ export function Player(props: PlayerProps) {
       <div
         className={`pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between bg-gradient-to-b from-black/80 to-transparent p-6 transition-opacity ${showChrome ? "opacity-100" : "opacity-0"}`}
       >
-        <Link href={backHref} className="pointer-events-auto label flex items-center gap-3 text-text hover:text-accent">
-          <span aria-hidden>&larr;</span> Back
-        </Link>
+        <div className="pointer-events-auto flex items-center gap-6">
+          <Link href={backHref} className="label flex items-center gap-3 text-text hover:text-accent">
+            <span aria-hidden>&larr;</span> Back
+          </Link>
+          {plan && plan.subtitles.length > 0 && (
+            <label className="label flex items-center gap-2 text-muted">
+              Subtitles
+              <select
+                value={subtitleIndex}
+                onChange={(e) => setSubtitleIndex(Number(e.target.value))}
+                className="border border-line-strong bg-black/70 px-2 py-1 text-[0.7rem] uppercase tracking-wider text-text"
+              >
+                <option value={-1}>Off</option>
+                {plan.subtitles.map((track, index) => (
+                  <option key={track.Index} value={track.Index}>
+                    {track.DisplayTitle ?? track.Title ?? `Subtitle ${index + 1}`}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+        </div>
         <div className="text-right">
           <p className="label text-text">{title}</p>
           {subtitle && <p className="label mt-1 text-[0.62rem] text-muted">{subtitle}</p>}

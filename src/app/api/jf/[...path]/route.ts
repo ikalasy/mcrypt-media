@@ -122,6 +122,26 @@ function responseHeaders(upstream: Response): Headers {
   return headers;
 }
 
+/** Jellyfin appends the caller's token to stream and subtitle URLs; the proxy authenticates, so drop it. */
+function stripToken(url: string | undefined): string | undefined {
+  if (!url) return url;
+  return url.replace(/([?&])(?:api_key|ApiKey)=[^&]*&?/gi, "$1").replace(/[?&]$/, "");
+}
+
+function stripTokensFromPlaybackInfo(info: PlaybackInfoResponse): PlaybackInfoResponse {
+  return {
+    ...info,
+    MediaSources: (info.MediaSources ?? []).map((source) => ({
+      ...source,
+      TranscodingUrl: stripToken(source.TranscodingUrl),
+      MediaStreams: (source.MediaStreams ?? []).map((stream) => ({
+        ...stream,
+        DeliveryUrl: stripToken(stream.DeliveryUrl),
+      })),
+    })),
+  };
+}
+
 /** HLS playlists reference sibling URLs; root-relative ones must be pointed back at the proxy. */
 function rewritePlaylist(text: string): string {
   return text
@@ -216,9 +236,9 @@ async function handle(request: NextRequest, context: RouteContext<"/api/jf/[...p
       headers,
     });
   }
-  if (isGuest && isPlaybackInfo && upstream.ok) {
-    const info = (await upstream.json()) as PlaybackInfoResponse;
-    const result = rewriteGuestPlaybackInfo(info, visitorId);
+  if (isPlaybackInfo && upstream.ok) {
+    const info = stripTokensFromPlaybackInfo((await upstream.json()) as PlaybackInfoResponse);
+    const result = isGuest ? rewriteGuestPlaybackInfo(info, visitorId) : info;
     if ("error" in result) return Response.json(result, { status: 429 });
     return Response.json(result, { headers: { "Cache-Control": "no-store" } });
   }
