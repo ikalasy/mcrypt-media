@@ -89,8 +89,8 @@ npm run lint
 ## Deploying on Dockge (TrueNAS)
 
 1. Create a new stack called `movie-crypted` in Dockge.
-2. Copy this folder (minus `node_modules` and `.next`) into the stack directory,
-   or clone it from git there.
+2. No copying needed: the service in `deploy/arr-stack-service.yaml` builds
+   straight from https://github.com/ikalasy/mcrypt-media.
 3. Create `.env` in the stack directory from `.env.example`:
    - `JELLYFIN_URL` and `JELLYSEERR_URL` can stay on the LAN addresses.
    - `SESSION_SECRET`: a fresh 64-character hex string.

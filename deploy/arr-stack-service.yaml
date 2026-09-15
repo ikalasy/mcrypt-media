@@ -2,10 +2,9 @@
 # It needs no media mount: everything goes through Jellyfin's API over the stack network.
   movie-crypted:
     build:
-      # Dockge builds on TrueNAS. Point this at wherever the source lives:
-      #   a git repo:  https://github.com/<you>/movie-crypted.git#main
-      #   or a folder next to compose.yaml:  ./movie-crypted
-      context: ./movie-crypted
+      # Dockge on TrueNAS clones and builds straight from GitHub.
+      # Redeploy after a push: Dockge > stack > Update (rebuilds the image).
+      context: https://github.com/ikalasy/mcrypt-media.git#main
       dockerfile: Dockerfile
     image: movie-crypted:latest
     container_name: movie-crypted
