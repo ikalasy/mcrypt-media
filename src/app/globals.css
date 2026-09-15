@@ -1,0 +1,275 @@
+@import "tailwindcss";
+
+/* CryptedSpace palette: near-black ground, hairline borders, one red accent. */
+:root {
+  --bg: #0a0a0b;
+  --panel: #101012;
+  --panel-2: #151517;
+  --line: #222226;
+  --line-strong: #2e2e33;
+  --text: #e8e8ea;
+  --muted: #7d7d85;
+  --dim: #55555c;
+  --accent: #e0141d;
+  --accent-soft: rgba(224, 20, 29, 0.16);
+  --ok: #2ecc71;
+  --warn: #f5a623;
+  --overlay: rgba(0, 0, 0, 0.72);
+  --scrim: linear-gradient(to top, rgba(10, 10, 11, 0.95), rgba(10, 10, 11, 0.55), rgba(10, 10, 11, 0.15));
+  color-scheme: dark;
+}
+
+/* Light palette: warm paper instead of black, same red, same hairlines. */
+:root[data-theme="light"] {
+  --bg: #f4f2ee;
+  --panel: #ffffff;
+  --panel-2: #ebe8e2;
+  --line: #dcd8d0;
+  --line-strong: #c6c1b7;
+  --text: #16161a;
+  --muted: #676770;
+  --dim: #9a9aa1;
+  --accent: #d10f18;
+  --accent-soft: rgba(209, 15, 24, 0.12);
+  --ok: #1f9d55;
+  --warn: #c77700;
+  --overlay: rgba(20, 18, 16, 0.55);
+  --scrim: linear-gradient(to top, rgba(244, 242, 238, 0.97), rgba(244, 242, 238, 0.6), rgba(244, 242, 238, 0.15));
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: light) {
+  :root[data-theme="auto"] {
+    --bg: #f4f2ee;
+    --panel: #ffffff;
+    --panel-2: #ebe8e2;
+    --line: #dcd8d0;
+    --line-strong: #c6c1b7;
+    --text: #16161a;
+    --muted: #676770;
+    --dim: #9a9aa1;
+    --accent: #d10f18;
+    --accent-soft: rgba(209, 15, 24, 0.12);
+    --ok: #1f9d55;
+    --warn: #c77700;
+    --overlay: rgba(20, 18, 16, 0.55);
+    --scrim: linear-gradient(to top, rgba(244, 242, 238, 0.97), rgba(244, 242, 238, 0.6), rgba(244, 242, 238, 0.15));
+    color-scheme: light;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-dim: var(--dim);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-overlay: var(--overlay);
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Uppercase tracked label, the mockup's default voice. */
+.label {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+}
+
+.label-lg {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.85rem;
+}
+
+/* Red "//" slash mark used as the brand glyph. */
+.slash {
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+}
+
+/* Thin horizontal rule with the section title, e.g. "// THE LIBRARY". */
+.rule {
+  border-bottom: 1px solid var(--line);
+}
+
+/* Hide scrollbars on horizontal card rows while keeping them scrollable. */
+.row-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.row-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Card artwork placeholder when Jellyfin has no image. */
+.art-empty {
+  background:
+    linear-gradient(135deg, transparent 0 48%, var(--line) 48% 52%, transparent 52%),
+    var(--panel-2);
+}
+
+/* Subtle vertical divider like the one before Server Stats. */
+.vdiv {
+  border-left: 1px solid var(--line);
+}
+
+/* Outlined button, e.g. PLAY. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  border: 1px solid var(--line-strong);
+  padding: 0.85rem 1.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.8rem;
+  color: var(--text);
+  background: transparent;
+  transition:
+    border-color 120ms ease,
+    background 120ms ease,
+    color 120ms ease;
+}
+.btn:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.btn-solid {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.btn-solid:hover {
+  background: #f31c25;
+  border-color: #f31c25;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Inputs share the same hairline treatment. */
+.field {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 0.85rem 1rem;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  outline: none;
+  transition: border-color 120ms ease;
+}
+.field::placeholder {
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+}
+.field:focus {
+  border-color: var(--accent);
+}
+
+/* Keyboard focus ring in the accent color. */
+:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Progress bar under Continue Watching cards. */
+.progress {
+  height: 2px;
+  background: var(--line-strong);
+}
+.progress > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+/* Gradient scrim over backdrops, theme aware. */
+.scrim {
+  background: var(--scrim);
+}
+
+/* Settings panel sidebar item. */
+.side-item {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.8rem 1.25rem;
+  border-left: 2px solid transparent;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  transition: color 120ms ease, background 120ms ease;
+}
+.side-item:hover {
+  color: var(--text);
+  background: var(--panel-2);
+}
+.side-item[aria-current="page"] {
+  color: var(--text);
+  border-left-color: var(--accent);
+  background: var(--panel-2);
+}
+
+/* Toggle switch for policy booleans. */
+.switch {
+  appearance: none;
+  width: 2.4rem;
+  height: 1.25rem;
+  border: 1px solid var(--line-strong);
+  background: var(--panel-2);
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 0.95rem;
+  height: 0.95rem;
+  background: var(--muted);
+  transition: transform 120ms ease, background 120ms ease;
+}
+.switch:checked {
+  border-color: var(--accent);
+}
+.switch:checked::after {
+  transform: translateX(1.15rem);
+  background: var(--accent);
+}
+
+/* Video element fills the player stage. */
+video {
+  background: #000;
+}

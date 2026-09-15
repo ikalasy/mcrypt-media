@@ -1,0 +1,462 @@
+/* =====================================================================
+   MCrypted // Movie Crypted  —  custom CSS theme for Jellyfin 12 (jellyfin-web)
+
+   Apply: Jellyfin Dashboard -> General -> Custom CSS -> paste -> Save.
+   Reload the web client (Ctrl+F5). Remove the CSS to revert; nothing is
+   stored anywhere else.
+
+   What it does: near-black ground, hairline borders, one red accent,
+   monospace uppercase labels, square 16:9 cards, red tab underline,
+   "//" wordmark in the header. Variables below are the real ones
+   jellyfin-web 12 ships (--jf-palette-*), so most of the client follows
+   them without per-element overrides.
+
+   What it cannot do: features. Guest access, requests, profiles, the
+   binary transition, the screensaver, and keeping Jellyfin off the
+   internet all live in Movie Crypted, not in CSS.
+   ===================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap");
+
+/* ---------- Palette (picked up by jellyfin-web's own rules) ---------- */
+:root {
+  --mc-bg: #0a0a0b;
+  --mc-panel: #101012;
+  --mc-panel-2: #151517;
+  --mc-line: #222226;
+  --mc-line-strong: #2e2e33;
+  --mc-text: #e8e8ea;
+  --mc-muted: #7d7d85;
+  --mc-dim: #55555c;
+  --mc-accent: #e0141d;
+  --mc-accent-soft: rgba(224, 20, 29, 0.16);
+  --mc-font: "JetBrains Mono", "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --jf-palette-background-default: var(--mc-bg);
+  --jf-palette-background-defaultImage: none;
+  --jf-palette-background-paper: var(--mc-panel);
+  --jf-palette-AppBar-defaultBg: var(--mc-bg);
+  --jf-palette-AppBar-transparentBg: rgba(10, 10, 11, 0.92);
+  --jf-palette-AppBar-gradient: none;
+  --jf-palette-primary-main: var(--mc-accent);
+  --jf-palette-primary-dark: #b30f16;
+  --jf-palette-primary-contrastText: #ffffff;
+  --jf-palette-secondary-main: var(--mc-accent);
+  --jf-palette-secondary-contrastText: #ffffff;
+  --jf-palette-text-primary: var(--mc-text);
+  --jf-palette-text-secondary: var(--mc-muted);
+  --jf-palette-divider: var(--mc-line);
+  --jf-palette-action-hover: var(--mc-accent-soft);
+  --jf-palette-action-focus: var(--mc-accent-soft);
+  --jf-palette-FilledInput-bg: var(--mc-panel);
+  --jf-palette-FilledInput-borderColor: var(--mc-line);
+  --jf-palette-Button-inheritContainedBg: var(--mc-panel-2);
+  --jf-palette-Button-inheritContainedHoverBg: var(--mc-accent-soft);
+  --jf-palette-SnackbarContent-bg: var(--mc-panel);
+  --jf-palette-SnackbarContent-color: var(--mc-text);
+  --jf-card-borderRadius: 0;
+}
+
+/* ---------- Type ---------- */
+html,
+body,
+.skinHeader,
+.emby-button,
+.emby-input,
+.emby-textarea,
+.emby-select,
+.emby-checkbox-label,
+.dialog,
+.paperList,
+.listItem {
+  font-family: var(--mc-font) !important;
+}
+
+html {
+  background: var(--mc-bg);
+  color: var(--mc-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  scrollbar-color: var(--mc-line-strong) var(--mc-bg);
+}
+
+::selection {
+  background: var(--mc-accent);
+  color: #fff;
+}
+
+/* Uppercase tracked labels, the CryptedSpace voice. */
+.sectionTitle,
+.cardText,
+.cardText-secondary,
+.headerButton,
+.emby-tab-button,
+.detailButton,
+.emby-button,
+.itemMiscInfo,
+.pageTitle,
+.listItemBodyText,
+.navMenuOption,
+.emby-checkbox-label,
+.inputLabel,
+.selectLabel,
+.textareaLabel,
+.fieldDescription {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.sectionTitle {
+  font-size: 0.9rem;
+  letter-spacing: 0.18em;
+  color: var(--mc-text);
+}
+
+/* "// " slash mark before section titles. */
+.sectionTitle::before {
+  content: "// ";
+  color: var(--mc-accent);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+}
+
+.cardText {
+  font-size: 0.72rem;
+  color: var(--mc-text);
+}
+
+.cardText-secondary {
+  font-size: 0.62rem;
+  color: var(--mc-muted);
+}
+
+/* ---------- Header ---------- */
+.skinHeader,
+.skinHeader-withBackground,
+.skinHeader.semiTransparent {
+  background: var(--mc-bg) !important;
+  border-bottom: 1px solid var(--mc-line);
+  backdrop-filter: none;
+}
+
+/* Replace the default logo with the wordmark. */
+.pageTitleWithDefaultLogo {
+  background-image: none !important;
+  width: auto;
+  padding-left: 0;
+}
+.pageTitleWithDefaultLogo::before {
+  content: "// ";
+  color: var(--mc-accent);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+}
+.pageTitleWithDefaultLogo::after {
+  content: "MOVIE CRYPTED";
+  color: var(--mc-text);
+  letter-spacing: 0.3em;
+  font-size: 0.85rem;
+  margin-left: 0.6em;
+}
+
+.headerButton {
+  color: var(--mc-muted);
+  font-size: 0.72rem;
+}
+.headerButton:hover {
+  color: var(--mc-text);
+}
+
+/* Library tabs: red underline on the active tab, like the mockup. */
+.emby-tabs-slider {
+  border-bottom: 1px solid var(--mc-line);
+}
+.emby-tab-button {
+  color: var(--mc-muted) !important;
+  font-size: 0.72rem;
+  padding: 1em 0.5em;
+  margin: 0 1em;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent !important;
+}
+.emby-tab-button.emby-tab-button-active {
+  color: var(--mc-text) !important;
+  border-bottom-color: var(--mc-accent);
+}
+.emby-tab-button:hover {
+  color: var(--mc-text) !important;
+}
+
+/* ---------- Drawer ---------- */
+.mainDrawer {
+  background: var(--mc-bg) !important;
+  border-right: 1px solid var(--mc-line);
+}
+.navMenuOption {
+  color: var(--mc-muted);
+  font-size: 0.72rem;
+  border-radius: 0;
+  border-left: 2px solid transparent;
+}
+.navMenuOption:hover {
+  background: var(--mc-panel-2);
+  color: var(--mc-text);
+}
+.navMenuOption-selected {
+  background: var(--mc-panel-2) !important;
+  color: var(--mc-text) !important;
+  border-left-color: var(--mc-accent);
+}
+.sidebarHeader {
+  color: var(--mc-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.65rem;
+}
+
+/* ---------- Cards ---------- */
+.cardBox {
+  border-radius: 0 !important;
+  border: 1px solid var(--mc-line);
+  background: var(--mc-panel);
+  box-shadow: none !important;
+  transition: border-color 120ms ease;
+}
+.card:hover .cardBox,
+.card:focus-within .cardBox {
+  border-color: var(--mc-accent);
+}
+.cardImageContainer {
+  background: var(--mc-panel-2);
+  border-radius: 0 !important;
+}
+.cardOverlayButton {
+  border-radius: 0;
+}
+.cardOverlayButton-hover {
+  background: rgba(10, 10, 11, 0.85);
+}
+.cardIndicators .indicator,
+.countIndicator,
+.playedIndicator {
+  border-radius: 0 !important;
+  background: var(--mc-accent) !important;
+}
+.itemProgressBar {
+  height: 2px;
+  background: var(--mc-line-strong);
+}
+.itemProgressBarForeground {
+  background: var(--mc-accent);
+}
+
+/* ---------- Buttons ---------- */
+.emby-button {
+  border-radius: 0 !important;
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+}
+.emby-button.raised {
+  background: transparent !important;
+  color: var(--mc-text) !important;
+  border: 1px solid var(--mc-line-strong);
+  box-shadow: none !important;
+}
+.emby-button.raised:hover {
+  border-color: var(--mc-accent);
+  background: var(--mc-accent-soft) !important;
+}
+.emby-button.raised.button-submit.button-submit,
+.emby-button.raised.button-accent.button-accent {
+  background: var(--mc-accent) !important;
+  background-color: var(--mc-accent) !important;
+  border-color: var(--mc-accent);
+  color: #fff !important;
+  opacity: 1;
+}
+.emby-button.raised.button-submit.button-submit:hover {
+  background: #f31c25 !important;
+  background-color: #f31c25 !important;
+}
+.detailButton {
+  border: 1px solid var(--mc-line-strong);
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--mc-text);
+}
+.detailButton:hover {
+  border-color: var(--mc-accent);
+  background: var(--mc-accent-soft) !important;
+}
+.paper-icon-button-light:hover {
+  background: var(--mc-accent-soft) !important;
+  color: var(--mc-text);
+}
+
+/* ---------- Inputs ---------- */
+.emby-input,
+.emby-textarea,
+.emby-select {
+  background: var(--mc-panel) !important;
+  border: 1px solid var(--mc-line) !important;
+  border-radius: 0 !important;
+  color: var(--mc-text) !important;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+}
+.emby-input:focus,
+.emby-textarea:focus,
+.emby-select:focus {
+  border-color: var(--mc-accent) !important;
+  box-shadow: none !important;
+}
+.inputLabel,
+.selectLabel,
+.textareaLabel {
+  color: var(--mc-muted);
+  font-size: 0.7rem;
+}
+.inputLabelFocused,
+.selectLabelFocused,
+.textareaLabelFocused {
+  color: var(--mc-accent);
+}
+.emby-checkbox:checked + span + .checkboxOutline,
+.emby-checkbox:checked + span + span + .checkboxOutline {
+  background: var(--mc-accent);
+  border-color: var(--mc-accent);
+  border-radius: 0;
+}
+.checkboxOutline {
+  border-radius: 0;
+  border-color: var(--mc-line-strong);
+}
+.mdl-switch__track,
+.emby-toggle .toggleTrack {
+  border-radius: 0;
+}
+
+/* ---------- Detail page ---------- */
+.detailPagePrimaryContainer,
+.detailRibbon {
+  background: var(--mc-bg) !important;
+  border-bottom: 1px solid var(--mc-line);
+}
+.itemName {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 500;
+}
+.itemMiscInfo {
+  color: var(--mc-muted);
+  font-size: 0.72rem;
+}
+.itemMiscInfo .mediaInfoItem + .mediaInfoItem::before {
+  content: " / ";
+  color: var(--mc-dim);
+  margin: 0 0.4em;
+}
+.itemBackdrop {
+  filter: saturate(0.9);
+}
+.detailImageContainer .cardBox {
+  border: 1px solid var(--mc-line);
+}
+.overview {
+  color: var(--mc-muted);
+  font-size: 0.85rem;
+  line-height: 1.7;
+  max-width: 70ch;
+}
+
+/* ---------- Dialogs, lists, misc ---------- */
+.dialog,
+.formDialog,
+.actionSheet {
+  background: var(--mc-panel) !important;
+  border: 1px solid var(--mc-line);
+  border-radius: 0 !important;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6) !important;
+}
+.formDialogHeader {
+  background: var(--mc-bg) !important;
+  border-bottom: 1px solid var(--mc-line);
+}
+.formDialogHeaderTitle {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.9rem;
+}
+.formDialogHeaderTitle::before {
+  content: "// ";
+  color: var(--mc-accent);
+  font-weight: 700;
+}
+.paperList,
+.listItem {
+  background: transparent !important;
+  border-radius: 0 !important;
+}
+.listItem {
+  border-bottom: 1px solid var(--mc-line);
+}
+.listItem:hover {
+  background: var(--mc-panel-2) !important;
+}
+.listItemBodyText {
+  font-size: 0.75rem;
+}
+.listItemBodyText-secondary {
+  color: var(--mc-muted);
+  text-transform: none;
+  letter-spacing: 0.04em;
+}
+
+/* Login page: the wordmark carries the brand, so the default icon goes. */
+#loginPage .cardBox,
+.loginPage .cardBox {
+  border: 1px solid var(--mc-line);
+}
+.imgLogoIcon {
+  display: none;
+}
+#loginPage h1,
+.loginPage h1 {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.95rem;
+}
+#loginPage h1::before,
+.loginPage h1::before {
+  content: "// ";
+  color: var(--mc-accent);
+  font-weight: 700;
+}
+.manualLoginForm .emby-button.raised.button-submit {
+  width: 100%;
+}
+
+/* Backdrops behind pages stay dark rather than washing the palette out. */
+.backgroundContainer.withBackdrop {
+  background: var(--mc-bg) !important;
+}
+.backdropImage {
+  opacity: 0.35;
+}
+
+/* Video OSD: square, hairline, red progress. */
+.osdControls .emby-slider-background-lower,
+.videoOsdBottom .emby-slider-background-lower {
+  background: var(--mc-accent);
+}
+.osdControls .emby-slider-background,
+.videoOsdBottom .emby-slider-background {
+  background: var(--mc-line-strong);
+  border-radius: 0;
+}
+.videoOsdBottom {
+  background: linear-gradient(to top, rgba(10, 10, 11, 0.95), transparent);
+}

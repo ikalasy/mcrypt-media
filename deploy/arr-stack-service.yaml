@@ -1,0 +1,27 @@
+# Paste this service into the arr stack's compose in Dockge (same level as jellyfin, jellyseerr, npm).
+# It needs no media mount: everything goes through Jellyfin's API over the stack network.
+  movie-crypted:
+    build:
+      # Dockge builds on TrueNAS. Point this at wherever the source lives:
+      #   a git repo:  https://github.com/<you>/movie-crypted.git#main
+      #   or a folder next to compose.yaml:  ./movie-crypted
+      context: ./movie-crypted
+      dockerfile: Dockerfile
+    image: movie-crypted:latest
+    container_name: movie-crypted
+    restart: unless-stopped
+    env_file:
+      - ./movie-crypted.env
+    volumes:
+      # SQLite store: profiles, theme, notification state, guest credentials.
+      - ./movie-crypted-data:/app/data
+    ports:
+      - "3210:3000"
+    depends_on:
+      - jellyfin
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s

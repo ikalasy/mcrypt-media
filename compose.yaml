@@ -1,0 +1,25 @@
+# Dockge stack for Movie Crypted.
+# 1. Put this file and the app source in the stack folder (or point build.context at a git checkout).
+# 2. Create .env next to it from .env.example.
+# 3. Publish through Nginx Proxy Manager -> movie-crypted:3000 with HTTPS.
+services:
+  movie-crypted:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: movie-crypted:latest
+    container_name: movie-crypted
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "3210:3000"
+    volumes:
+      # Profiles, theme, notification state, and the guest account credentials.
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
