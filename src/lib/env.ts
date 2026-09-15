@@ -11,7 +11,7 @@ function required(key: string): string {
 }
 
 export const APP_NAME = "Movie Crypted";
-export const APP_VERSION = "0.1.0";
+export const APP_VERSION = "0.1.1";
 
 const MIN_SECRET_LENGTH = 32;
 
